@@ -13,4 +13,4 @@ Each module introduces a specific development process and requires implementing 
 - [ ] Module 3: Software Requirements — user story derivation agent
 - [ ] Module 4: CI/CD — deployment pipeline agent
 - [ ] Module 5: TDD/BDD — multi-agent test system
-- [ ] Module 6: FitTrack — team project using all agents
+- [ ] Module 6: Subscription Platform — team project using all agents
