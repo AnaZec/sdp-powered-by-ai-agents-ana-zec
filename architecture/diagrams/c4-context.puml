@@ -1,0 +1,12 @@
+@startuml c4-context
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(user, "User", "Provides input fields and reads results")
+
+System(system, "Minesweeper Field Processor", "Processes input fields and computes mine counts")
+
+Rel(user, system, "Provides input")
+Rel(system, user, "Returns processed field")
+
+@enduml
