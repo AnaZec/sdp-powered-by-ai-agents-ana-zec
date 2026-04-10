@@ -1,0 +1,25 @@
+@startuml runtime-main
+actor User
+participant "main()" as Main
+participant "Input Parser" as Parser
+participant "Field Processor" as Processor
+participant "Output Formatter" as Formatter
+
+User -> Main : launch with stdin
+Main -> Parser : parseFields(stdin)
+loop for each field until "0 0"
+  Parser -> Parser : read header (R C)
+  Parser -> Parser : read R grid rows
+end
+Parser --> Main : vector<Field>
+
+loop for each Field
+  Main -> Processor : processField(field)
+  Processor -> Processor : for each '.' cell, count adjacent '*'
+  Processor --> Main : annotated Field
+
+  Main -> Formatter : printField(field, index)
+  Formatter -> User : print "Field #N:" + grid to stdout
+end
+
+@enduml

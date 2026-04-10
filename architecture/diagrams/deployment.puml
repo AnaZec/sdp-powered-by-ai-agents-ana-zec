@@ -1,0 +1,11 @@
+@startuml deployment
+
+node "Developer Machine\n(Linux / macOS / Windows)" as machine {
+  component "minesweeper\n(C++ executable)" as binary
+}
+
+actor "User" as user
+
+user --> binary : Executes (CLI / pipe)
+
+@enduml

@@ -1,26 +1,60 @@
-# 09 - Architecture Decisions
+# 09. Architecture Decisions
 
-## ADR-001: Technology Decisions for Minesweeper Field Processor
+## ADR-001: Three-Component Pipeline Structure
 
 ### Status
 Accepted
 
 ### Context
-The system is based on the Minesweeper Kata, which requires reading multiple input fields, processing them to compute the number of adjacent mines for each cell, and producing formatted output. The system is a simple data-processing application with no need for persistent storage or external services.
+The system needs to read, process, and output minesweeper fields. A clear decomposition strategy is needed.
 
 ### Decision
-The system will be implemented as a console-based application using a general-purpose programming language (e.g., C++). The architecture will follow a modular structure consisting of:
-
-- Input Parser
-- Field Processor
-- Output Formatter
-
-All data will be processed in memory, and no database or external storage will be used.
+Split the application into three components: Input Parser, Field Processor, and Output Formatter, orchestrated by `main()`.
 
 ### Rationale
-A console-based application is sufficient because the problem focuses on input-output processing. A modular structure separates responsibilities, making the system easier to understand, maintain, and test. Avoiding external dependencies keeps the system simple and aligned with the requirements of the kata.
+Each component has a single responsibility. The pipeline structure makes data flow explicit and each stage independently testable.
 
 ### Consequences
-- The system is simple to implement and test.
-- No data persistence is provided.
-- The modular design allows future extensions, such as adding a graphical interface or alternative input methods.
+- (+) Clean separation of concerns.
+- (+) Each component can be tested in isolation.
+- (-) Slight overhead of passing data structures between stages, negligible at this scale.
+
+---
+
+## ADR-002: `vector<string>` as Grid Representation
+
+### Status
+Accepted
+
+### Context
+The field grid needs an in-memory representation that supports row/column indexing for neighbour lookups.
+
+### Decision
+Represent each field's grid as a `vector<string>`, where each string is one row.
+
+### Rationale
+Simple, idiomatic C++. Character access via `grid[r][c]` is direct. No custom data structure needed for this problem size.
+
+### Consequences
+- (+) Minimal code, easy to read and manipulate.
+- (-) Mutates the grid in-place during processing; a copy would be needed if the original must be preserved (not required here).
+
+---
+
+## ADR-003: Synchronous Single-Threaded Execution
+
+### Status
+Accepted
+
+### Context
+Multiple fields must be processed sequentially.
+
+### Decision
+Process all fields in a single thread, sequentially.
+
+### Rationale
+The problem size is small and bounded. Concurrency would add complexity with no benefit.
+
+### Consequences
+- (+) Simple, deterministic execution.
+- (-) Not scalable to very large inputs, which is outside the kata scope.
