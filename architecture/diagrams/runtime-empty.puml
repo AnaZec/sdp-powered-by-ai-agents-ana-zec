@@ -1,0 +1,12 @@
+@startuml runtime-empty
+actor User
+participant "main()" as Main
+participant "Input Parser" as Parser
+
+User -> Main : launch with "0 0" on stdin
+Main -> Parser : parseFields(stdin)
+Parser -> Parser : read header "0 0" → stop
+Parser --> Main : empty vector<Field>
+Main -> User : (no output)
+
+@enduml

@@ -6,6 +6,12 @@ Throughout the course, we focus on designing agents with well-defined inputs, ru
 
 Each module introduces a specific development process and requires implementing it as an agent, which is then used as part of a larger system.
 
+## Chosen Kata
+
+For the architecture module, the system being designed is based on the **Minesweeper Kata** from the Coding Dojo catalogue.
+
+This kata represents a data-processing pipeline that reads multiple input fields and computes the number of adjacent mines for each cell, making it suitable for demonstrating architectural decomposition (input parsing, processing, and output formatting).
+
 ## Course Progress
 
 - [ ] Module 1: Git — workflow agent

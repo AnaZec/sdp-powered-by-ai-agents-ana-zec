@@ -1,0 +1,16 @@
+@startuml c4-container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User", "Runs the application")
+System_Boundary(systemBoundary, "Minesweeper Field Processor") {
+  Container(parser, "Input Parser", "C++ module", "Reads stdin and parses fields into structured data")
+  Container(processor, "Field Processor", "C++ module", "Computes adjacent mine counts for each cell")
+  Container(formatter, "Output Formatter", "C++ module", "Formats and prints annotated fields to stdout")
+}
+
+Rel(user, parser, "Provides input via", "stdin")
+Rel(parser, processor, "Passes parsed fields to")
+Rel(processor, formatter, "Passes annotated fields to")
+Rel(formatter, user, "Prints output via", "stdout")
+
+@enduml

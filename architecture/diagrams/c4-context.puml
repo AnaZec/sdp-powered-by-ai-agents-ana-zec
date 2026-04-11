@@ -1,0 +1,9 @@
+@startuml c4-context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(user, "User", "Provides minesweeper fields via stdin and reads annotated output from stdout")
+System(system, "Minesweeper Field Processor", "Reads input fields, computes adjacent mine counts, and prints formatted output")
+
+Rel(user, system, "Pipes input to / reads output from", "stdin/stdout")
+
+@enduml
