@@ -6,7 +6,7 @@
 **I WANT** every safe cell in a minefield to be replaced with the correct adjacent mine count
 **SO THAT** the annotated field is correct
 
-**Architecture Reference:** Chapter 5 Building Block View - Field Processor, Chapter 6 Runtime View - Field Processing Flow
+**Architecture Reference:** Chapter 5 Building Block View - Field Processor, Chapter 6 Runtime View - Main Processing Scenario
 
 ### PROC-STORY-001-S1: Count adjacent mines for an interior safe cell
 
@@ -59,7 +59,7 @@
 **I WANT** processed cell values to appear in the final printed field
 **SO THAT** I can see the annotated result of the computation
 
-**Architecture Reference:** Chapter 5 Building Block View - Output Formatter, Chapter 6 Runtime View - Output Generation Flow
+**Architecture Reference:** Chapter 5 Building Block View - Output Formatter, Chapter 6 Runtime View - Main Processing Scenario
 
 #### PROC-FE-001.1-S1: Display computed numeric values
 
@@ -104,7 +104,7 @@
 **I WANT** boundary cells to be processed safely
 **SO THAT** edge and corner positions are counted without invalid memory access
 
-**Architecture Reference:** Chapter 5 Building Block View - Field Processor, Chapter 6 Runtime View - Cell Evaluation
+**Architecture Reference:** Chapter 5 Building Block View - Field Processor, Chapter 11 Risks and Technical Debts - R-2
 
 #### PROC-BE-001.2-S1: Process a corner cell correctly
 
@@ -160,28 +160,28 @@
 **I WANT** processing logic tests to run automatically
 **SO THAT** regressions in adjacent-count computation are detected early
 
-**Architecture Reference:** Chapter 7 Deployment View - Single Binary Execution, Chapter 8 Cross-Cutting Concepts - Testability
+**Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
 
-#### PROC-INFRA-001.1-S1: Run processing tests in CI
+#### PROC-INFRA-001.1-S1: Run processing tests via the build system
 
 **GIVEN**
-- automated tests exist for field processing
-- the CI workflow is configured
+- unit tests for `processField` exist and pass a `Field` struct directly
+- the build system is configured to compile and run tests
 
 **WHEN**
-- changes are pushed or a pull request is opened
+- the test target is invoked
 
 **THEN**
-- the processing tests are executed automatically
-- the pipeline fails if any processing test fails
+- the processing tests execute without running the full binary
+- any failing test causes the build to report failure
 
 ### PROC-INFRA-001.2
 
 **AS A** developer
 **I WANT** the application to build reproducibly as a single C++ binary
-**SO THAT** the field processor can be run consistently in local and CI environments
+**SO THAT** the field processor can be run consistently in local environments
 
-**Architecture Reference:** Chapter 7 Deployment View - Single Compiled Binary
+**Architecture Reference:** Chapter 7 Deployment View - Build and Run
 
 #### PROC-INFRA-001.2-S1: Build and run the processor binary
 
@@ -190,7 +190,7 @@
 - the source code is present
 
 **WHEN**
-- the project is compiled and executed with redirected standard input
+- `g++ -std=c++17 -o minesweeper main.cpp` is executed and the binary is run with redirected stdin
 
 **THEN**
 - a single runnable binary is produced
@@ -198,17 +198,80 @@
 
 ---
 
+## PROC-STORY-002
+
+**AS A** developer
+**I WANT** the program to compile and run reproducibly as a single C++ binary
+**SO THAT** processing logic can be verified consistently
+
+**Architecture Reference:** Chapter 7 Deployment View - Build and Run, Chapter 2 Constraints - T-1
+
+### PROC-STORY-002-S1: Binary compiles with the standard C++17 command
+
+**GIVEN**
+- a C++17 compiler is available on the developer machine
+- `main.cpp` is present
+
+**WHEN**
+- `g++ -std=c++17 -o minesweeper main.cpp` is executed
+
+**THEN**
+- the command exits with code `0`
+- a single executable `minesweeper` is produced
+
+### PROC-STORY-002-S2: Binary produces correct output for a known input
+
+**GIVEN**
+- the `minesweeper` binary has been compiled
+- a sample input file with known expected output exists
+
+**WHEN**
+- `./minesweeper < input.txt` is executed
+
+**THEN**
+- stdout matches the expected annotated output exactly
+
+---
+
+## INFRA Sub-Stories
+
+### PROC-INFRA-002.1
+
+**AS A** developer
+**I WANT** a known-good input/output pair committed alongside the source
+**SO THAT** the binary can be validated end-to-end with a single diff command
+
+**Architecture Reference:** Chapter 7 Deployment View - Build and Run, Chapter 6 Runtime View - Main Processing Scenario
+
+#### PROC-INFRA-002.1-S1: End-to-end diff validation
+
+**GIVEN**
+- `input.txt` and `expected.txt` are present
+- the binary is compiled
+
+**WHEN**
+- `./minesweeper < input.txt | diff - expected.txt` is executed
+
+**THEN**
+- the command exits with code `0`
+- no differences are reported
+
+---
+
 ## Traceability Verification
 
 | Scenario ID | Architecture Reference | Parent Story | Testable Assertion |
 |---|---|---|---|
-| PROC-STORY-001-S1 | Chapter 6 Runtime View - Field Processing Flow | PROC-STORY-001 | safe interior cell is replaced with the correct adjacent mine count |
+| PROC-STORY-001-S1 | Chapter 6 Runtime View - Main Processing Scenario | PROC-STORY-001 | safe interior cell is replaced with the correct adjacent mine count |
 | PROC-STORY-001-S2 | Chapter 5 Building Block View - Field Processor | PROC-STORY-001 | mine cell remains `*` |
 | PROC-STORY-001-S3 | Chapter 5 Building Block View - Field Processor | PROC-STORY-001 | safe cell with no adjacent mines becomes `0` |
-| PROC-FE-001.1-S1 | Chapter 6 Runtime View - Output Generation Flow | PROC-FE-001.1 | computed value appears in printed output |
+| PROC-FE-001.1-S1 | Chapter 6 Runtime View - Main Processing Scenario | PROC-FE-001.1 | computed value appears in printed output |
 | PROC-BE-001.1-S1 | Chapter 5 Building Block View - Field Processor | PROC-BE-001.1 | all valid neighboring positions are checked exactly once |
-| PROC-BE-001.2-S1 | Chapter 6 Runtime View - Cell Evaluation | PROC-BE-001.2 | corner cell uses only valid in-bounds neighbors |
-| PROC-BE-001.2-S2 | Chapter 6 Runtime View - Cell Evaluation | PROC-BE-001.2 | edge cell uses only valid in-bounds neighbors |
+| PROC-BE-001.2-S1 | Chapter 11 Risks and Technical Debts - R-2 | PROC-BE-001.2 | corner cell uses only valid in-bounds neighbors |
+| PROC-BE-001.2-S2 | Chapter 11 Risks and Technical Debts - R-2 | PROC-BE-001.2 | edge cell uses only valid in-bounds neighbors |
 | PROC-BE-001.3-S1 | Chapter 5 Building Block View - Field Processor | PROC-BE-001.3 | mine cell bypasses numeric processing |
-| PROC-INFRA-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | PROC-INFRA-001.1 | CI runs processing tests and fails on errors |
-| PROC-INFRA-001.2-S1 | Chapter 7 Deployment View - Single Compiled Binary | PROC-INFRA-001.2 | single binary builds and runs with stdin input |
+| PROC-INFRA-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | PROC-INFRA-001.1 | processing tests run via build system without full binary |
+| PROC-INFRA-001.2-S1 | Chapter 7 Deployment View - Build and Run | PROC-INFRA-001.2 | single binary builds and runs with stdin input |
+| PROC-STORY-002-S1 | Chapter 7 Deployment View - Build and Run | PROC-STORY-002 | binary compiles with standard C++17 command |
+| PROC-STORY-002-S2 | Chapter 7 Deployment View - Build and Run | PROC-STORY-002 | binary produces correct output when run with a sample input file |
+| PROC-INFRA-002.1-S1 | Chapter 6 Runtime View - Main Processing Scenario | PROC-INFRA-002.1 | end-to-end diff exits 0 with no differences |
