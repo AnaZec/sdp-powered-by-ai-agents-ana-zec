@@ -10,6 +10,29 @@ The following domains are derived from the bounded contexts identified in the ar
 
 These domains directly map to the bounded contexts defined in the Building Block View (Chapter 5) and are used as the basis for story IDs and traceability.
 
+## DDD Building Blocks
+
+> Architecture reference: Chapter 5 Building Block View, Chapter 12 Glossary
+
+### Entities
+
+- None explicitly identified from the architecture — the system is stateless and processes fields in a single pass with no persistent identity
+
+### Aggregates
+
+- `Field` — aggregate root grouping `rows`, `cols`, and `grid`; represents one complete minesweeper field and is the consistency boundary passed between all three pipeline components
+
+### Value Objects
+
+- `grid` (rows of `.` / `*`) — immutable sequence of strings representing the raw minefield; defined by its content, not identity
+- `AnnotatedGrid` (rows of digits / `*`) — immutable result of processing; each cell is either `*` or a digit character
+
+### Domain Services
+
+- `Input Parser` — stateless service that reads an `istream` and produces a collection of `Field` aggregates (Chapter 5 Building Block View)
+- `Field Processor` — stateless service that transforms a `Field` aggregate into an annotated grid (Chapter 5 Building Block View)
+- `Output Formatter` — stateless service that serialises annotated fields to an `ostream` (Chapter 5 Building Block View)
+
 ## Prioritized Story Inventory
 
 ### Core Stories (Pareto 20%)
