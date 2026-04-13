@@ -6,17 +6,7 @@ The Minesweeper Field Processor is a single console application. It has no exter
 
 ## 3.2 Context Diagram
 
-```plantuml
-@startuml c4-context
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
-
-Person(user, "User", "Provides minesweeper fields via stdin and reads annotated output from stdout")
-System(system, "Minesweeper Field Processor", "Reads input fields, computes adjacent mine counts, and prints formatted output")
-
-Rel(user, system, "Pipes input to / reads output from", "stdin/stdout")
-
-@enduml
-```
+![C4 Context Diagram](diagrams/c4-context.svg)
 
 ## 3.3 External Interfaces
 

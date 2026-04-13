@@ -6,19 +6,7 @@ The Minesweeper Field Processor is a single compiled binary. There is no deploym
 
 ## 7.2 Deployment Diagram
 
-```plantuml
-@startuml deployment
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
-
-Node(machine, "Developer Machine", "Linux / macOS / Windows") {
-  Container(binary, "minesweeper", "C++ executable", "Compiled binary, reads stdin, writes stdout")
-}
-
-Person(user, "User", "Runs the binary")
-Rel(user, binary, "Executes", "CLI / pipe")
-
-@enduml
-```
+![Deployment Diagram](diagrams/deployment.svg)
 
 ## 7.3 Build and Run
 
