@@ -2,12 +2,21 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
-      - 'feature/**'
+    branches: [main, 'feature/**', 'fix/**']
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'Dockerfile'
+      - '.github/workflows/ci.yml'
   pull_request:
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'Dockerfile'
+      - '.github/workflows/ci.yml'
 
 permissions:
   contents: read
@@ -21,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t my-kata .
+        run: docker build -t kata-tests .
 
       - name: Run tests inside container
-        run: docker run --rm my-kata
+        run: docker run --rm kata-tests

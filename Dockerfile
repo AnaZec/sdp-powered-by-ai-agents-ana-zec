@@ -1,15 +1,10 @@
-FROM ubuntu:24.04
+FROM python:3.12-slim
 
-# Install minimal dependencies (satisfies requirement)
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends bash && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set working directory
 WORKDIR /app
 
-# Copy source code and tests (even if not present yet)
+COPY pyproject.toml .
+RUN pip install --no-cache-dir pytest
+
 COPY . .
 
-# Run tests (placeholder for now)
-CMD ["bash", "-lc", "echo Tests passed"]
+CMD ["python", "-m", "pytest", "tests/", "-v", "--tb=short"]
