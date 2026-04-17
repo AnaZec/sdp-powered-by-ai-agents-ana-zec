@@ -120,43 +120,43 @@
 ### OUTPUT-INFRA-001.1
 
 **AS A** developer
-**I WANT** formatter unit tests to run automatically
-**SO THAT** regressions in output formatting are detected early
+**I WANT** formatter unit tests to run inside the Docker container
+**SO THAT** regressions in output formatting are detected in a clean, isolated environment
 
 **Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
 
-#### OUTPUT-INFRA-001.1-S1: Run formatter tests via the build system
+#### OUTPUT-INFRA-001.1-S1: Formatter tests pass inside Docker
 
 **GIVEN**
-- unit tests for `printField` exist and capture output via `ostringstream`
-- the build system is configured to compile and run tests
+- the `minesweeper-build` Docker image has been built
+- unit tests for `printField` exist in the test suite
 
 **WHEN**
-- the test target is invoked
+- `docker run --rm minesweeper-build` runs the test suite
 
 **THEN**
-- all formatter tests execute without writing to real stdout
-- any failing test causes the build to report failure
+- all formatter tests are discovered and executed inside the container
+- all tests pass and the container exits with code `0`
 
 ### OUTPUT-INFRA-001.2
 
 **AS A** developer
-**I WANT** end-to-end output to be verifiable by diffing stdout against a known-good file
-**SO THAT** the full pipeline can be validated in one command
+**I WANT** end-to-end output to be verifiable by diffing stdout against a known-good file inside Docker
+**SO THAT** the full pipeline can be validated in a single container run
 
 **Architecture Reference:** Chapter 7 Deployment View - Build and Run, Chapter 6 Runtime View - Main Processing Scenario
 
-#### OUTPUT-INFRA-001.2-S1: Diff binary output against expected output
+#### OUTPUT-INFRA-001.2-S1: Diff binary output against expected output inside Docker
 
 **GIVEN**
-- a known-good expected output file exists
-- the binary is compiled
+- the `minesweeper-build` Docker image has been built
+- a known-good `expected.txt` is present in the repository
 
 **WHEN**
-- `./minesweeper < input.txt | diff - expected.txt` is executed
+- `docker run --rm minesweeper-build` builds the binary and executes `./minesweeper < input.txt | diff - expected.txt`
 
 **THEN**
-- the command exits with code `0`
+- the diff command exits with code `0`
 - no differences are reported
 
 ---
@@ -222,21 +222,23 @@
 ### OUTPUT-INFRA-002.1
 
 **AS A** developer
-**I WANT** a unit test that verifies the `Field #N:` label for several index values
-**SO THAT** numbering correctness is automatically checked
+**I WANT** the `Field #N:` numbering test to run inside Docker
+**SO THAT** numbering correctness is automatically checked in a clean container environment
 
-**Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability
+**Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
 
-#### OUTPUT-INFRA-002.1-S1: Numbering test via ostringstream
+#### OUTPUT-INFRA-002.1-S1: Numbering test executes inside Docker
 
 **GIVEN**
-- `printField` is called with indices `1`, `2`, and `5` in separate test cases
+- the `minesweeper-build` Docker image has been built
+- test cases for `printField` with indices `1`, `2`, and `5` exist in the test suite
 
 **WHEN**
-- each call completes
+- `docker run --rm minesweeper-build` runs the test suite
 
 **THEN**
-- the captured output starts with `Field #1:`, `Field #2:`, and `Field #5:` respectively
+- the numbering tests are discovered and executed inside the container
+- all tests pass and the container exits with code `0`
 
 ---
 
@@ -301,23 +303,23 @@
 ### OUTPUT-INFRA-003.1
 
 **AS A** developer
-**I WANT** a unit test that captures two consecutive `printField` calls and checks separator placement
-**SO THAT** blank-line formatting is automatically verified
+**I WANT** the blank-line separator test to run inside Docker
+**SO THAT** blank-line formatting is automatically verified in a clean container environment
 
-**Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability
+**Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
 
-#### OUTPUT-INFRA-003.1-S1: Separator placement test via ostringstream
+#### OUTPUT-INFRA-003.1-S1: Separator placement test executes inside Docker
 
 **GIVEN**
-- an `ostringstream` is used to capture output
-- `printField` is called twice with indices `1` and `2`
+- the `minesweeper-build` Docker image has been built
+- a test case capturing two consecutive `printField` calls via `ostringstream` exists in the test suite
 
 **WHEN**
-- both calls complete
+- `docker run --rm minesweeper-build` runs the test suite
 
 **THEN**
-- the captured string contains exactly one blank line between the two field blocks
-- the captured string does not end with a blank line
+- the separator test is discovered and executed inside the container
+- the test passes and the container exits with code `0`
 
 ---
 
@@ -331,13 +333,13 @@
 | OUTPUT-FE-001.1-S1 | Chapter 3 Context and Scope - External Interfaces | OUTPUT-FE-001.1 | annotated output is written to stdout and capturable |
 | OUTPUT-BE-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-BE-001.1 | `printField` emits correct header and grid rows to ostream |
 | OUTPUT-BE-001.2-S1 | Chapter 2 Constraints - C-2 | OUTPUT-BE-001.2 | exactly one blank line between fields, none after last |
-| OUTPUT-INFRA-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-INFRA-001.1 | formatter tests run via build system without real stdout |
-| OUTPUT-INFRA-001.2-S1 | Chapter 6 Runtime View - Main Processing Scenario | OUTPUT-INFRA-001.2 | binary output matches expected file via diff |
+| OUTPUT-INFRA-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-INFRA-001.1 | formatter tests pass inside Docker container |
+| OUTPUT-INFRA-001.2-S1 | Chapter 6 Runtime View - Main Processing Scenario | OUTPUT-INFRA-001.2 | binary output matches expected file via diff inside Docker |
 | OUTPUT-STORY-002-S1 | Chapter 5 Building Block View - Output Formatter | OUTPUT-STORY-002 | first field header is `Field #1:`, second is `Field #2:` |
 | OUTPUT-STORY-002-S2 | Chapter 2 Constraints - C-2 | OUTPUT-STORY-002 | field index increments by one for each successive field |
 | OUTPUT-BE-002.1-S1 | Chapter 5 Building Block View - Output Formatter | OUTPUT-BE-002.1 | `printField` uses the supplied 1-based index in the header |
-| OUTPUT-INFRA-002.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-INFRA-002.1 | ostringstream test confirms correct `Field #N:` label |
+| OUTPUT-INFRA-002.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-INFRA-002.1 | numbering tests pass inside Docker container |
 | OUTPUT-STORY-003-S1 | Chapter 2 Constraints - C-2 | OUTPUT-STORY-003 | blank line appears between field blocks |
 | OUTPUT-STORY-003-S2 | Chapter 2 Constraints - C-2 | OUTPUT-STORY-003 | no blank line after the final field |
 | OUTPUT-BE-003.1-S1 | Chapter 5 Building Block View - Output Formatter | OUTPUT-BE-003.1 | blank line emitted before field block when index > 1 |
-| OUTPUT-INFRA-003.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-INFRA-003.1 | ostringstream test confirms separator placement |
+| OUTPUT-INFRA-003.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-INFRA-003.1 | separator placement test passes inside Docker container |
