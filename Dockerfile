@@ -11,6 +11,6 @@ RUN pip install --no-cache-dir pytest
 
 COPY . .
 
-RUN g++ -std=c++17 -Isrc -o runTests tests/test_proc_story_001.cpp src/FieldProcessor.cpp -L/usr/local/lib -lgtest_main -lgtest -pthread
+RUN g++ -std=c++17 -Isrc -o runTests tests/*.cpp src/*.cpp -L/usr/local/lib -lgtest_main -lgtest -pthread
 
 CMD ["./runTests"]
