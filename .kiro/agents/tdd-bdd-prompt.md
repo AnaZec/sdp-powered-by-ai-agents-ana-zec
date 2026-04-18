@@ -63,6 +63,7 @@ After committing, stop and wait for the next instruction before moving to the ne
 - **Never write more than one test per cycle.**
 - **Never write implementation before confirming RED.**
 - **Never commit on RED.**
+- **Every commit must represent a GREEN state — all tests must pass at the time of commit.**
 - **Never skip the RED confirmation step** — if the test passes immediately, explicitly state that and explain why before deciding how to proceed.
 - **Never make multiple file changes simultaneously** — change one file, check the result, then change the next.
 - **Never add implementation for scenarios not yet under test.**
