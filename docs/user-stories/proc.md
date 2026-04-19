@@ -165,11 +165,11 @@
 #### PROC-INFRA-001.1-S1: Processing tests pass inside Docker
 
 **GIVEN**
-- the `minesweeper-build` Docker image has been built
+- the `kata-tests` Docker image has been built
 - unit tests for `processField` exist in the test suite
 
 **WHEN**
-- `docker run --rm minesweeper-build` runs the test suite
+- `docker run --rm kata-tests` runs the test suite
 
 **THEN**
 - all processing tests are discovered and executed inside the container
@@ -186,11 +186,11 @@
 #### PROC-INFRA-001.2-S1: Binary compiles inside Docker
 
 **GIVEN**
-- the `minesweeper-build` Docker image has been built with `g++` installed
+- the `kata-tests` Docker image has been built with `g++` installed
 - `main.cpp` is present in the repository
 
 **WHEN**
-- `docker run --rm minesweeper-build` executes `g++ -std=c++17 -o minesweeper main.cpp`
+- `docker run --rm kata-tests` executes `g++ -std=c++17 -o minesweeper main.cpp`
 
 **THEN**
 - the binary compiles without errors inside the container
@@ -246,11 +246,11 @@
 #### PROC-INFRA-002.1-S1: End-to-end diff validation inside Docker
 
 **GIVEN**
-- the `minesweeper-build` Docker image has been built
+- the `kata-tests` Docker image has been built
 - `input.txt` and `expected.txt` are present in the repository
 
 **WHEN**
-- `docker run --rm minesweeper-build` builds the binary and executes `./minesweeper < input.txt | diff - expected.txt`
+- `docker run --rm kata-tests` builds the binary and executes `./minesweeper < input.txt | diff - expected.txt`
 
 **THEN**
 - the diff command exits with code `0`

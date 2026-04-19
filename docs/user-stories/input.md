@@ -134,7 +134,7 @@
 - the `Dockerfile` is based on a Linux image and installs `g++`
 
 **WHEN**
-- `docker build -t minesweeper-build .` is executed
+- `docker build -t kata-tests .` is executed
 
 **THEN**
 - the image builds without errors
@@ -151,11 +151,11 @@
 #### INPUT-INFRA-001.2-S1: Binary compiles and tests pass inside Docker
 
 **GIVEN**
-- the `minesweeper-build` Docker image has been built
+- the `kata-tests` Docker image has been built
 - `main.cpp` and any test sources are present in the repository
 
 **WHEN**
-- `docker run --rm minesweeper-build` executes `g++ -std=c++17 -o minesweeper main.cpp` and runs the test suite
+- `docker run --rm kata-tests` executes `g++ -std=c++17 -o minesweeper main.cpp` and runs the test suite
 
 **THEN**
 - the binary compiles without errors
@@ -235,11 +235,11 @@
 #### INPUT-INFRA-002.1-S1: Terminator test executes inside Docker
 
 **GIVEN**
-- the `minesweeper-build` Docker image has been built
+- the `kata-tests` Docker image has been built
 - a test case for `parseFields` with `"0 0\n"` input exists in the test suite
 
 **WHEN**
-- `docker run --rm minesweeper-build` runs the test suite
+- `docker run --rm kata-tests` runs the test suite
 
 **THEN**
 - the terminator test is discovered and executed inside the container
@@ -319,11 +319,11 @@
 #### INPUT-INFRA-003.1-S1: Multi-field test executes inside Docker
 
 **GIVEN**
-- the `minesweeper-build` Docker image has been built
+- the `kata-tests` Docker image has been built
 - a test case supplying two fields via a `stringstream` exists in the test suite
 
 **WHEN**
-- `docker run --rm minesweeper-build` runs the test suite
+- `docker run --rm kata-tests` runs the test suite
 
 **THEN**
 - the multi-field test is discovered and executed inside the container

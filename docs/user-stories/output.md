@@ -128,11 +128,11 @@
 #### OUTPUT-INFRA-001.1-S1: Formatter tests pass inside Docker
 
 **GIVEN**
-- the `minesweeper-build` Docker image has been built
+- the `kata-tests` Docker image has been built
 - unit tests for `printField` exist in the test suite
 
 **WHEN**
-- `docker run --rm minesweeper-build` runs the test suite
+- `docker run --rm kata-tests` runs the test suite
 
 **THEN**
 - all formatter tests are discovered and executed inside the container
@@ -149,11 +149,11 @@
 #### OUTPUT-INFRA-001.2-S1: Diff binary output against expected output inside Docker
 
 **GIVEN**
-- the `minesweeper-build` Docker image has been built
+- the `kata-tests` Docker image has been built
 - a known-good `expected.txt` is present in the repository
 
 **WHEN**
-- `docker run --rm minesweeper-build` builds the binary and executes `./minesweeper < input.txt | diff - expected.txt`
+- `docker run --rm kata-tests` builds the binary and executes `./minesweeper < input.txt | diff - expected.txt`
 
 **THEN**
 - the diff command exits with code `0`
@@ -230,11 +230,11 @@
 #### OUTPUT-INFRA-002.1-S1: Numbering test executes inside Docker
 
 **GIVEN**
-- the `minesweeper-build` Docker image has been built
+- the `kata-tests` Docker image has been built
 - test cases for `printField` with indices `1`, `2`, and `5` exist in the test suite
 
 **WHEN**
-- `docker run --rm minesweeper-build` runs the test suite
+- `docker run --rm kata-tests` runs the test suite
 
 **THEN**
 - the numbering tests are discovered and executed inside the container
@@ -311,11 +311,11 @@
 #### OUTPUT-INFRA-003.1-S1: Separator placement test executes inside Docker
 
 **GIVEN**
-- the `minesweeper-build` Docker image has been built
+- the `kata-tests` Docker image has been built
 - a test case capturing two consecutive `printField` calls via `ostringstream` exists in the test suite
 
 **WHEN**
-- `docker run --rm minesweeper-build` runs the test suite
+- `docker run --rm kata-tests` runs the test suite
 
 **THEN**
 - the separator test is discovered and executed inside the container
