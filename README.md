@@ -102,6 +102,13 @@ A key aspect of this project is the use of **custom AI agents** to support the d
 * **Git Agent**
   Automates issue creation, branching strategy, and pull requests
 
+* **Architecture Agent**
+  Generates system architecture based on the arc42 template
+  Defines:
+    * system structure and decomposition
+    * component responsibilities
+    * architectural decisions and constraints
+
 * **Requirements Agent**
   Derives structured user stories from architecture documentation
   Includes:
