@@ -9,8 +9,6 @@ TEST(PROC_INFRA_001_1_S1, ProcessingTestsPassInsideDocker) {
     Field result = processField(field);
 
     // THEN - adjacent counts are correct and mine is preserved
-    EXPECT_EQ(result.grid[0][0], '*');
-    EXPECT_EQ(result.grid[0][1], '1');
-    EXPECT_EQ(result.grid[1][0], '1');
-    EXPECT_EQ(result.grid[1][1], '1');
+    EXPECT_EQ(result.grid[0], "*1");
+    EXPECT_EQ(result.grid[1], "11");
 }
