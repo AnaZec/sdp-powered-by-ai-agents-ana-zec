@@ -11,6 +11,7 @@ RUN pip install --no-cache-dir pytest
 
 COPY . .
 
-RUN g++ -std=c++17 -Isrc -o runTests tests/*.cpp src/*.cpp -L/usr/local/lib -lgtest_main -lgtest -pthread
+RUN g++ -std=c++17 -Isrc -o minesweeper src/main.cpp src/InputParser.cpp src/FieldProcessor.cpp src/OutputFormatter.cpp
+RUN g++ -std=c++17 -Isrc -o runTests tests/*.cpp src/InputParser.cpp src/FieldProcessor.cpp src/OutputFormatter.cpp -L/usr/local/lib -lgtest_main -lgtest -pthread
 
 CMD ["./runTests"]
