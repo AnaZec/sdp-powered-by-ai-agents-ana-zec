@@ -5,8 +5,8 @@
 TEST(OUTPUT_STORY_001_S2, SeparateConsecutiveFieldsWithBlankLine) {
     // GIVEN
     Field f1{1, 1, {"0"}}, f2{1, 1, {"1"}}, f3{1, 1, {"*"}};
-    std::ostringstream out;
     // WHEN
+    std::ostringstream out;
     printField(out, f1, 1);
     printField(out, f2, 2);
     printField(out, f3, 3);
