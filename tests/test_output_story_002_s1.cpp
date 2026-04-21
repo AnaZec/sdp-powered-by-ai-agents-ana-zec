@@ -12,7 +12,5 @@ TEST(OUTPUT_STORY_002_S1, FirstAndSecondFieldsCarryCorrectNumbers) {
     printField(out, f, 2);
 
     // THEN - first block begins with Field #1:, second with Field #2:
-    std::string result = out.str();
-    EXPECT_EQ(result.substr(0, 9), "Field #1:");
-    EXPECT_NE(result.find("Field #2:"), std::string::npos);
+    EXPECT_EQ(out.str(), "Field #1:\n0\n\nField #2:\n0\n");
 }
