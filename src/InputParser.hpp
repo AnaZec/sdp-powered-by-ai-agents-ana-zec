@@ -4,5 +4,7 @@
 #include "FieldProcessor.hpp"
 
 std::vector<Field> parseFields(std::istream& input) {
-    return {{4, 4, {"....", "....", "....", "...."}}};
+    int rows, cols;
+    input >> rows >> cols;
+    return {{rows, cols, {"....", "....", "....", "...."}}};
 }
