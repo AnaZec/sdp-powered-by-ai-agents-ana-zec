@@ -1,5 +1,5 @@
 #pragma once
-#include <iostream>
+#include <istream>
 #include <vector>
 #include "FieldProcessor.hpp"
 
