@@ -13,5 +13,7 @@ std::vector<Field> parseFields(std::istream& input) {
         std::getline(input, line);
         grid.push_back(line);
     }
-    return {{rows, cols, grid}};
+    Field field{rows, cols, grid};
+    input >> rows >> cols;
+    return {field};
 }
