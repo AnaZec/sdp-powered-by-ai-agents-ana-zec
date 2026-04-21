@@ -1,14 +1,4 @@
 #pragma once
-#include <string>
-#include <vector>
+#include "Field.hpp"
 
-struct Field {
-    int rows;
-    int cols;
-    std::vector<std::string> grid;
-};
-
-class FieldProcessor {
-public:
-    Field process(const Field& field);
-};
+Field processField(const Field& field);
