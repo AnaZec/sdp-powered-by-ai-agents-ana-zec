@@ -3,10 +3,10 @@
 #include "InputParser.hpp"
 
 TEST(INPUT_INFRA_002_1_S1, TerminatorOnlyInputReturnsEmpty) {
-    // GIVEN
+    // GIVEN - stdin contains only "0 0"
     std::istringstream input("0 0\n");
     // WHEN
     auto fields = parseFields(input);
-    // THEN
-    EXPECT_TRUE(fields.empty());
+    // THEN - empty collection, no fields parsed
+    EXPECT_EQ(fields.size(), 0u);
 }
