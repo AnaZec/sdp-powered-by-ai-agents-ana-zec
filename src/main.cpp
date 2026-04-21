@@ -3,8 +3,8 @@
 #include "OutputFormatter.hpp"
 
 int main() {
-    auto fields = parseFields(std::cin);
     FieldProcessor processor;
-    for (int i = 0; i < (int)fields.size(); i++)
-        printField(std::cout, processor.process(fields[i]), i + 1);
+    int index = 0;
+    for (const auto& field : parseFields(std::cin))
+        printField(std::cout, processor.process(field), ++index);
 }
