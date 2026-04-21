@@ -4,14 +4,15 @@ std::vector<Field> parseFields(std::istream& input) {
     std::vector<Field> fields;
     int rows, cols;
     while (input >> rows >> cols && (rows || cols)) {
+        input.ignore();
         std::vector<std::string> grid;
-        std::string line;
-        std::getline(input, line);
+        grid.reserve(rows);
         for (int i = 0; i < rows; i++) {
+            std::string line;
             std::getline(input, line);
-            grid.push_back(line);
+            grid.push_back(std::move(line));
         }
-        fields.push_back({rows, cols, grid});
+        fields.push_back({rows, cols, std::move(grid)});
     }
     return fields;
 }
