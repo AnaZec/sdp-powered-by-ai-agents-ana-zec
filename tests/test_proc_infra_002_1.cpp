@@ -10,9 +10,9 @@ TEST(PROC_INFRA_002_1_S1, FullPipelinePassesInsideDocker) {
     std::ostringstream output;
 
     // WHEN - the full pipeline runs
-    auto fields = parseFields(input);
-    for (size_t i = 0; i < fields.size(); i++)
-        printField(output, processField(fields[i]), i + 1);
+    int index = 0;
+    for (const auto& field : parseFields(input))
+        printField(output, processField(field), ++index);
 
     // THEN - output is produced correctly
     EXPECT_EQ(output.str(), "Field #1:\n00\n00\n");
