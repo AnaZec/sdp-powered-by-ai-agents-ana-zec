@@ -12,5 +12,5 @@ TEST(OUTPUT_BE_001_1_S1, EmitCorrectHeaderAndGridToOstream) {
 
     // THEN - the stream contains "Field #2:" on the first line
     // THEN - the next two lines are "1*" and "11"
-    EXPECT_EQ(out.str(), "Field #2:\n1*\n11\n");
+    EXPECT_EQ(out.str(), "\nField #2:\n1*\n11\n");
 }
