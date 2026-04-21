@@ -9,8 +9,7 @@ TEST(PROC_BE_001_1_S1, CountMinesInAllNeighboringDirections) {
                        "**."}};
 
     // WHEN - the processor evaluates that cell
-    FieldProcessor processor;
-    Field result = processor.process(field);
+    Field result = processField(field);
 
     // THEN - all valid neighboring positions are checked exactly once
     // THEN - the resulting count equals the number of neighboring mines

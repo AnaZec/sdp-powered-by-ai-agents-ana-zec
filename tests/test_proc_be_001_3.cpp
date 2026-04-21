@@ -6,8 +6,7 @@ TEST(PROC_BE_001_3_S1, SkipNumericConversionForMine) {
     Field field{1, 3, {"*.*"}};
 
     // WHEN - the processor evaluates the field
-    FieldProcessor processor;
-    Field result = processor.process(field);
+    Field result = processField(field);
 
     // THEN - the cell remains '*'
     EXPECT_EQ(result.grid[0][0], '*');

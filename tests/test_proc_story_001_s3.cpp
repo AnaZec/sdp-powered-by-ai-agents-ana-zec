@@ -8,8 +8,7 @@ TEST(PROC_STORY_001_S3, AssignZeroWhenNoAdjacentMinesExist) {
     Field field{2, 2, {"..", ".."}};
 
     // WHEN - the field processor computes the annotated output for the field
-    FieldProcessor processor;
-    Field result = processor.process(field);
+    Field result = processField(field);
 
     // THEN - the target cell is replaced with '0'
     EXPECT_EQ(result.grid[0][0], '0');

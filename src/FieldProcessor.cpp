@@ -1,6 +1,6 @@
 #include "FieldProcessor.hpp"
 
-Field FieldProcessor::process(const Field& field) {
+Field processField(const Field& field) {
     Field result = field;
     auto inBounds = [&](int r, int c) {
         return r >= 0 && r < field.rows && c >= 0 && c < field.cols;

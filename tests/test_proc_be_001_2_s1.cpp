@@ -6,8 +6,7 @@ TEST(PROC_BE_001_2_S1, ProcessCornerCellCorrectly) {
     Field field{1, 1, {"."}};
 
     // WHEN - the processor evaluates its adjacent mine count
-    FieldProcessor processor;
-    Field result = processor.process(field);
+    Field result = processField(field);
 
     // THEN - only valid in-bounds neighbors are considered
     // THEN - the correct adjacent mine count is produced
