@@ -122,44 +122,44 @@
 ### INPUT-INFRA-001.1
 
 **AS A** developer
-**I WANT** parser unit tests to run automatically
-**SO THAT** regressions in input parsing are detected early
+**I WANT** the Docker image to build successfully with a C++ compiler installed
+**SO THAT** the project can be compiled and tested in a reproducible container environment
 
-**Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
+**Architecture Reference:** Chapter 7 Deployment View - Build and Run, Chapter 2 Constraints - T-1
 
-#### INPUT-INFRA-001.1-S1: Run parser tests via the build system
+#### INPUT-INFRA-001.1-S1: Docker image builds with g++ available
 
 **GIVEN**
-- unit tests for `parseFields` exist and use a `stringstream` as input
-- the build system is configured to compile and run tests
+- a `Dockerfile` is present at the repository root
+- the `Dockerfile` is based on a Linux image and installs `g++`
 
 **WHEN**
-- the test target is invoked
+- `docker build -t kata-tests .` is executed
 
 **THEN**
-- all parser tests execute without requiring real stdin
-- any failing test causes the build to report failure
+- the image builds without errors
+- `g++` is available inside the container
 
 ### INPUT-INFRA-001.2
 
 **AS A** developer
-**I WANT** the application to compile to a single binary with a standard C++17 command
-**SO THAT** the input parsing component is always built and runnable in the same way
+**I WANT** the project to compile and parser tests to run inside the Docker container
+**SO THAT** regressions in input parsing are detected in a clean, isolated environment
 
-**Architecture Reference:** Chapter 7 Deployment View - Build and Run
+**Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
 
-#### INPUT-INFRA-001.2-S1: Compile and run the binary
+#### INPUT-INFRA-001.2-S1: Binary compiles and tests pass inside Docker
 
 **GIVEN**
-- a C++17 compiler is available on the developer machine
-- the source file `main.cpp` is present
+- the `kata-tests` Docker image has been built
+- `main.cpp` and any test sources are present in the repository
 
 **WHEN**
-- `g++ -std=c++17 -o minesweeper main.cpp` is executed
+- `docker run --rm kata-tests` executes `g++ -std=c++17 -o minesweeper main.cpp` and runs the test suite
 
 **THEN**
-- a single executable `minesweeper` is produced with no errors
-- running `./minesweeper < input.txt` produces annotated output on stdout
+- the binary compiles without errors
+- all parser tests pass and the container exits with code `0`
 
 ---
 
@@ -227,22 +227,23 @@
 ### INPUT-INFRA-002.1
 
 **AS A** developer
-**I WANT** a unit test that verifies terminator handling using a `stringstream`
-**SO THAT** the stop-on-`0 0` behaviour is automatically verified
+**I WANT** a test that verifies terminator handling to run inside Docker
+**SO THAT** the stop-on-`0 0` behaviour is automatically verified in a clean environment
 
-**Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability
+**Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
 
-#### INPUT-INFRA-002.1-S1: Terminator test via stringstream
+#### INPUT-INFRA-002.1-S1: Terminator test executes inside Docker
 
 **GIVEN**
-- a `stringstream` containing `"0 0\n"` is prepared
+- the `kata-tests` Docker image has been built
+- a test case for `parseFields` with `"0 0\n"` input exists in the test suite
 
 **WHEN**
-- `parseFields` is called with that stream
+- `docker run --rm kata-tests` runs the test suite
 
 **THEN**
-- the returned vector is empty
-- the test passes without any real stdin interaction
+- the terminator test is discovered and executed inside the container
+- the test passes and the container exits with code `0`
 
 ---
 
@@ -310,22 +311,23 @@
 ### INPUT-INFRA-003.1
 
 **AS A** developer
-**I WANT** a unit test that supplies multiple fields via a `stringstream`
-**SO THAT** sequential parsing is automatically verified
+**I WANT** the multi-field parsing test to run inside Docker
+**SO THAT** sequential parsing is automatically verified in a clean container environment
 
-**Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability
+**Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
 
-#### INPUT-INFRA-003.1-S1: Multi-field stringstream test
+#### INPUT-INFRA-003.1-S1: Multi-field test executes inside Docker
 
 **GIVEN**
-- a `stringstream` containing two valid fields followed by `0 0`
+- the `kata-tests` Docker image has been built
+- a test case supplying two fields via a `stringstream` exists in the test suite
 
 **WHEN**
-- `parseFields` is called with that stream
+- `docker run --rm kata-tests` runs the test suite
 
 **THEN**
-- the returned vector contains exactly two `Field` structs
-- each struct has the dimensions and grid matching its respective input block
+- the multi-field test is discovered and executed inside the container
+- the test passes and the container exits with code `0`
 
 ---
 
@@ -339,13 +341,13 @@
 | INPUT-FE-001.1-S1 | Chapter 7 Deployment View - Build and Run | INPUT-FE-001.1 | binary accepts piped file and writes output to stdout |
 | INPUT-BE-001.1-S1 | Chapter 5 Building Block View - Input Parser | INPUT-BE-001.1 | Field struct has correct rows, cols, and grid |
 | INPUT-BE-001.2-S1 | Chapter 6 Runtime View - Edge Case: Empty Input | INPUT-BE-001.2 | parser stops at `0 0` and excludes terminator from results |
-| INPUT-INFRA-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | INPUT-INFRA-001.1 | parser tests run via build system without real stdin |
-| INPUT-INFRA-001.2-S1 | Chapter 7 Deployment View - Build and Run | INPUT-INFRA-001.2 | single binary compiles and runs with stdin redirection |
+| INPUT-INFRA-001.1-S1 | Chapter 7 Deployment View - Build and Run | INPUT-INFRA-001.1 | Docker image builds with g++ available |
+| INPUT-INFRA-001.2-S1 | Chapter 8 Cross-Cutting Concepts - Testability | INPUT-INFRA-001.2 | binary compiles and parser tests pass inside Docker |
 | INPUT-STORY-002-S1 | Chapter 5 Building Block View - Input Parser | INPUT-STORY-002 | parser halts and returns only fields read before `0 0` |
 | INPUT-STORY-002-S2 | Chapter 6 Runtime View - Edge Case: Empty Input | INPUT-STORY-002 | `0 0` as first line yields empty result and no output |
 | INPUT-BE-002.1-S1 | Chapter 5 Building Block View - Input Parser | INPUT-BE-002.1 | loop exits immediately when header row equals `0 0` |
-| INPUT-INFRA-002.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | INPUT-INFRA-002.1 | terminator test passes using stringstream with `0 0` |
+| INPUT-INFRA-002.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | INPUT-INFRA-002.1 | terminator test passes inside Docker container |
 | INPUT-STORY-003-S1 | Chapter 5 Building Block View - Input Parser | INPUT-STORY-003 | all fields in a multi-field stream are returned in order |
 | INPUT-STORY-003-S2 | Chapter 6 Runtime View - Main Processing Scenario | INPUT-STORY-003 | each output field corresponds to the correct input field |
 | INPUT-BE-003.1-S1 | Chapter 5 Building Block View - Input Parser | INPUT-BE-003.1 | vector contains one Field per input field in correct order |
-| INPUT-INFRA-003.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | INPUT-INFRA-003.1 | multi-field stringstream test returns correct field count |
+| INPUT-INFRA-003.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | INPUT-INFRA-003.1 | multi-field test passes inside Docker container |

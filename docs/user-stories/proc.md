@@ -157,44 +157,44 @@
 ### PROC-INFRA-001.1
 
 **AS A** developer
-**I WANT** processing logic tests to run automatically
-**SO THAT** regressions in adjacent-count computation are detected early
+**I WANT** processing logic tests to run inside the Docker container
+**SO THAT** regressions in adjacent-count computation are detected in a clean, isolated environment
 
 **Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
 
-#### PROC-INFRA-001.1-S1: Run processing tests via the build system
+#### PROC-INFRA-001.1-S1: Processing tests pass inside Docker
 
 **GIVEN**
-- unit tests for `processField` exist and pass a `Field` struct directly
-- the build system is configured to compile and run tests
+- the `kata-tests` Docker image has been built
+- unit tests for `processField` exist in the test suite
 
 **WHEN**
-- the test target is invoked
+- `docker run --rm kata-tests` runs the test suite
 
 **THEN**
-- the processing tests execute without running the full binary
-- any failing test causes the build to report failure
+- all processing tests are discovered and executed inside the container
+- all tests pass and the container exits with code `0`
 
 ### PROC-INFRA-001.2
 
 **AS A** developer
-**I WANT** the application to build reproducibly as a single C++ binary
-**SO THAT** the field processor can be run consistently in local environments
+**I WANT** the project to build to a single C++ binary inside Docker
+**SO THAT** the field processor can be compiled and run consistently in a containerised environment
 
-**Architecture Reference:** Chapter 7 Deployment View - Build and Run
+**Architecture Reference:** Chapter 7 Deployment View - Build and Run, Chapter 2 Constraints - T-1
 
-#### PROC-INFRA-001.2-S1: Build and run the processor binary
+#### PROC-INFRA-001.2-S1: Binary compiles inside Docker
 
 **GIVEN**
-- a C++17 compiler is available
-- the source code is present
+- the `kata-tests` Docker image has been built with `g++` installed
+- `main.cpp` is present in the repository
 
 **WHEN**
-- `g++ -std=c++17 -o minesweeper main.cpp` is executed and the binary is run with redirected stdin
+- `docker run --rm kata-tests` executes `g++ -std=c++17 -o minesweeper main.cpp`
 
 **THEN**
-- a single runnable binary is produced
-- the binary accepts minefield input and produces annotated output
+- the binary compiles without errors inside the container
+- the container exits with code `0`
 
 ---
 
@@ -238,22 +238,22 @@
 ### PROC-INFRA-002.1
 
 **AS A** developer
-**I WANT** a known-good input/output pair committed alongside the source
-**SO THAT** the binary can be validated end-to-end with a single diff command
+**I WANT** end-to-end output validation to run inside Docker
+**SO THAT** the full pipeline can be verified in a clean container environment
 
 **Architecture Reference:** Chapter 7 Deployment View - Build and Run, Chapter 6 Runtime View - Main Processing Scenario
 
-#### PROC-INFRA-002.1-S1: End-to-end diff validation
+#### PROC-INFRA-002.1-S1: End-to-end diff validation inside Docker
 
 **GIVEN**
-- `input.txt` and `expected.txt` are present
-- the binary is compiled
+- the `kata-tests` Docker image has been built
+- `input.txt` and `expected.txt` are present in the repository
 
 **WHEN**
-- `./minesweeper < input.txt | diff - expected.txt` is executed
+- `docker run --rm kata-tests` builds the binary and executes `./minesweeper < input.txt | diff - expected.txt`
 
 **THEN**
-- the command exits with code `0`
+- the diff command exits with code `0`
 - no differences are reported
 
 ---
@@ -270,8 +270,8 @@
 | PROC-BE-001.2-S1 | Chapter 11 Risks and Technical Debts - R-2 | PROC-BE-001.2 | corner cell uses only valid in-bounds neighbors |
 | PROC-BE-001.2-S2 | Chapter 11 Risks and Technical Debts - R-2 | PROC-BE-001.2 | edge cell uses only valid in-bounds neighbors |
 | PROC-BE-001.3-S1 | Chapter 5 Building Block View - Field Processor | PROC-BE-001.3 | mine cell bypasses numeric processing |
-| PROC-INFRA-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | PROC-INFRA-001.1 | processing tests run via build system without full binary |
-| PROC-INFRA-001.2-S1 | Chapter 7 Deployment View - Build and Run | PROC-INFRA-001.2 | single binary builds and runs with stdin input |
+| PROC-INFRA-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | PROC-INFRA-001.1 | processing tests pass inside Docker container |
+| PROC-INFRA-001.2-S1 | Chapter 7 Deployment View - Build and Run | PROC-INFRA-001.2 | binary compiles inside Docker with g++ |
 | PROC-STORY-002-S1 | Chapter 7 Deployment View - Build and Run | PROC-STORY-002 | binary compiles with standard C++17 command |
 | PROC-STORY-002-S2 | Chapter 7 Deployment View - Build and Run | PROC-STORY-002 | binary produces correct output when run with a sample input file |
-| PROC-INFRA-002.1-S1 | Chapter 6 Runtime View - Main Processing Scenario | PROC-INFRA-002.1 | end-to-end diff exits 0 with no differences |
+| PROC-INFRA-002.1-S1 | Chapter 6 Runtime View - Main Processing Scenario | PROC-INFRA-002.1 | end-to-end diff passes inside Docker container |
