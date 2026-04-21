@@ -157,43 +157,45 @@
 ### PROC-INFRA-001.1
 
 **AS A** developer
-**I WANT** processing logic tests to run inside the Docker container
-**SO THAT** regressions in adjacent-count computation are detected in a clean, isolated environment
+**I WANT** all processing tests to pass when running `./runTests` inside the Docker container
+**SO THAT** regressions in adjacent-count computation are detected in a clean, isolated local environment
 
 **Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
 
 #### PROC-INFRA-001.1-S1: Processing tests pass inside Docker
 
 **GIVEN**
-- the `kata-tests` Docker image has been built
-- unit tests for `processField` exist in the test suite
+- the `kata-tests` Docker image has been built via `docker build -t kata-tests .`
+- Google Test cases for `processField` exist in `tests/`
 
 **WHEN**
-- `docker run --rm kata-tests` runs the test suite
+- `docker run --rm kata-tests` is executed
 
 **THEN**
-- all processing tests are discovered and executed inside the container
-- all tests pass and the container exits with code `0`
+- `./runTests` runs inside the container
+- all processing tests pass
+- the container exits with code `0`
 
 ### PROC-INFRA-001.2
 
 **AS A** developer
-**I WANT** the project to build to a single C++ binary inside Docker
-**SO THAT** the field processor can be compiled and run consistently in a containerised environment
+**I WANT** both the `minesweeper` and `runTests` binaries to be compiled inside the Docker image
+**SO THAT** the field processor can be built and tested consistently in a local containerised environment
 
 **Architecture Reference:** Chapter 7 Deployment View - Build and Run, Chapter 2 Constraints - T-1
 
-#### PROC-INFRA-001.2-S1: Binary compiles inside Docker
+#### PROC-INFRA-001.2-S1: Binaries compile inside Docker
 
 **GIVEN**
-- the `kata-tests` Docker image has been built with `g++` installed
-- `main.cpp` is present in the repository
+- the `kata-tests` Docker image has been built via `docker build -t kata-tests .`
+- the Dockerfile compiles `minesweeper` from all source files and `runTests` from `tests/*.cpp` using `g++ -std=c++17`
 
 **WHEN**
-- `docker run --rm kata-tests` executes `g++ -std=c++17 -o minesweeper main.cpp`
+- `docker run --rm kata-tests` is executed
 
 **THEN**
-- the binary compiles without errors inside the container
+- `./runTests` runs inside the container
+- all tests pass
 - the container exits with code `0`
 
 ---
@@ -238,23 +240,24 @@
 ### PROC-INFRA-002.1
 
 **AS A** developer
-**I WANT** end-to-end output validation to run inside Docker
-**SO THAT** the full pipeline can be verified in a clean container environment
+**I WANT** the full test suite to run inside Docker and exit cleanly
+**SO THAT** end-to-end pipeline correctness is verified in a clean local container environment
 
 **Architecture Reference:** Chapter 7 Deployment View - Build and Run, Chapter 6 Runtime View - Main Processing Scenario
 
-#### PROC-INFRA-002.1-S1: End-to-end diff validation inside Docker
+#### PROC-INFRA-002.1-S1: Full test suite passes inside Docker
 
 **GIVEN**
-- the `kata-tests` Docker image has been built
-- `input.txt` and `expected.txt` are present in the repository
+- the `kata-tests` Docker image has been built via `docker build -t kata-tests .`
+- Google Test cases covering the full pipeline exist in `tests/`
 
 **WHEN**
-- `docker run --rm kata-tests` builds the binary and executes `./minesweeper < input.txt | diff - expected.txt`
+- `docker run --rm kata-tests` is executed
 
 **THEN**
-- the diff command exits with code `0`
-- no differences are reported
+- `./runTests` runs inside the container
+- all tests pass
+- the container exits with code `0`
 
 ---
 
@@ -270,8 +273,8 @@
 | PROC-BE-001.2-S1 | Chapter 11 Risks and Technical Debts - R-2 | PROC-BE-001.2 | corner cell uses only valid in-bounds neighbors |
 | PROC-BE-001.2-S2 | Chapter 11 Risks and Technical Debts - R-2 | PROC-BE-001.2 | edge cell uses only valid in-bounds neighbors |
 | PROC-BE-001.3-S1 | Chapter 5 Building Block View - Field Processor | PROC-BE-001.3 | mine cell bypasses numeric processing |
-| PROC-INFRA-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | PROC-INFRA-001.1 | processing tests pass inside Docker container |
-| PROC-INFRA-001.2-S1 | Chapter 7 Deployment View - Build and Run | PROC-INFRA-001.2 | binary compiles inside Docker with g++ |
+| PROC-INFRA-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | PROC-INFRA-001.1 | `docker run --rm kata-tests` runs `./runTests`; all processing tests pass; exit code 0 |
+| PROC-INFRA-001.2-S1 | Chapter 7 Deployment View - Build and Run | PROC-INFRA-001.2 | `docker build -t kata-tests .` compiles both binaries; `docker run --rm kata-tests` exits with code 0 |
 | PROC-STORY-002-S1 | Chapter 7 Deployment View - Build and Run | PROC-STORY-002 | binary compiles with standard C++17 command |
 | PROC-STORY-002-S2 | Chapter 7 Deployment View - Build and Run | PROC-STORY-002 | binary produces correct output when run with a sample input file |
-| PROC-INFRA-002.1-S1 | Chapter 6 Runtime View - Main Processing Scenario | PROC-INFRA-002.1 | end-to-end diff passes inside Docker container |
+| PROC-INFRA-002.1-S1 | Chapter 6 Runtime View - Main Processing Scenario | PROC-INFRA-002.1 | `docker run --rm kata-tests` runs `./runTests`; all tests pass; exit code 0 |

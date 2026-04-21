@@ -120,44 +120,46 @@
 ### OUTPUT-INFRA-001.1
 
 **AS A** developer
-**I WANT** formatter unit tests to run inside the Docker container
-**SO THAT** regressions in output formatting are detected in a clean, isolated environment
+**I WANT** all formatter tests to pass when running `./runTests` inside the Docker container
+**SO THAT** regressions in output formatting are detected in a clean, isolated local environment
 
 **Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
 
 #### OUTPUT-INFRA-001.1-S1: Formatter tests pass inside Docker
 
 **GIVEN**
-- the `kata-tests` Docker image has been built
-- unit tests for `printField` exist in the test suite
+- the `kata-tests` Docker image has been built via `docker build -t kata-tests .`
+- Google Test cases for `printField` exist in `tests/`
 
 **WHEN**
-- `docker run --rm kata-tests` runs the test suite
+- `docker run --rm kata-tests` is executed
 
 **THEN**
-- all formatter tests are discovered and executed inside the container
-- all tests pass and the container exits with code `0`
+- `./runTests` runs inside the container
+- all formatter tests pass
+- the container exits with code `0`
 
 ### OUTPUT-INFRA-001.2
 
 **AS A** developer
-**I WANT** end-to-end output to be verifiable by diffing stdout against a known-good file inside Docker
-**SO THAT** the full pipeline can be validated in a single container run
+**I WANT** the full test suite to run inside Docker and exit cleanly
+**SO THAT** the complete output pipeline is validated in a single local container run
 
 **Architecture Reference:** Chapter 7 Deployment View - Build and Run, Chapter 6 Runtime View - Main Processing Scenario
 
-#### OUTPUT-INFRA-001.2-S1: Diff binary output against expected output inside Docker
+#### OUTPUT-INFRA-001.2-S1: Full test suite passes inside Docker
 
 **GIVEN**
-- the `kata-tests` Docker image has been built
-- a known-good `expected.txt` is present in the repository
+- the `kata-tests` Docker image has been built via `docker build -t kata-tests .`
+- Google Test cases covering output formatting exist in `tests/`
 
 **WHEN**
-- `docker run --rm kata-tests` builds the binary and executes `./minesweeper < input.txt | diff - expected.txt`
+- `docker run --rm kata-tests` is executed
 
 **THEN**
-- the diff command exits with code `0`
-- no differences are reported
+- `./runTests` runs inside the container
+- all tests pass
+- the container exits with code `0`
 
 ---
 
@@ -222,23 +224,24 @@
 ### OUTPUT-INFRA-002.1
 
 **AS A** developer
-**I WANT** the `Field #N:` numbering test to run inside Docker
-**SO THAT** numbering correctness is automatically checked in a clean container environment
+**I WANT** the `Field #N:` numbering tests to pass when running `./runTests` inside the Docker container
+**SO THAT** numbering correctness is automatically checked in a clean local environment
 
 **Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
 
 #### OUTPUT-INFRA-002.1-S1: Numbering test executes inside Docker
 
 **GIVEN**
-- the `kata-tests` Docker image has been built
-- test cases for `printField` with indices `1`, `2`, and `5` exist in the test suite
+- the `kata-tests` Docker image has been built via `docker build -t kata-tests .`
+- Google Test cases for `printField` with indices `1`, `2`, and `5` exist in `tests/`
 
 **WHEN**
-- `docker run --rm kata-tests` runs the test suite
+- `docker run --rm kata-tests` is executed
 
 **THEN**
-- the numbering tests are discovered and executed inside the container
-- all tests pass and the container exits with code `0`
+- `./runTests` runs inside the container
+- all numbering tests pass
+- the container exits with code `0`
 
 ---
 
@@ -303,23 +306,24 @@
 ### OUTPUT-INFRA-003.1
 
 **AS A** developer
-**I WANT** the blank-line separator test to run inside Docker
-**SO THAT** blank-line formatting is automatically verified in a clean container environment
+**I WANT** the blank-line separator test to pass when running `./runTests` inside the Docker container
+**SO THAT** blank-line formatting is automatically verified in a clean local environment
 
 **Architecture Reference:** Chapter 8 Cross-Cutting Concepts - Testability, Chapter 7 Deployment View - Build and Run
 
 #### OUTPUT-INFRA-003.1-S1: Separator placement test executes inside Docker
 
 **GIVEN**
-- the `kata-tests` Docker image has been built
-- a test case capturing two consecutive `printField` calls via `ostringstream` exists in the test suite
+- the `kata-tests` Docker image has been built via `docker build -t kata-tests .`
+- a Google Test case capturing two consecutive `printField` calls via `ostringstream` exists in `tests/`
 
 **WHEN**
-- `docker run --rm kata-tests` runs the test suite
+- `docker run --rm kata-tests` is executed
 
 **THEN**
-- the separator test is discovered and executed inside the container
-- the test passes and the container exits with code `0`
+- `./runTests` runs inside the container
+- the separator test passes
+- the container exits with code `0`
 
 ---
 
@@ -333,13 +337,13 @@
 | OUTPUT-FE-001.1-S1 | Chapter 3 Context and Scope - External Interfaces | OUTPUT-FE-001.1 | annotated output is written to stdout and capturable |
 | OUTPUT-BE-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-BE-001.1 | `printField` emits correct header and grid rows to ostream |
 | OUTPUT-BE-001.2-S1 | Chapter 2 Constraints - C-2 | OUTPUT-BE-001.2 | exactly one blank line between fields, none after last |
-| OUTPUT-INFRA-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-INFRA-001.1 | formatter tests pass inside Docker container |
-| OUTPUT-INFRA-001.2-S1 | Chapter 6 Runtime View - Main Processing Scenario | OUTPUT-INFRA-001.2 | binary output matches expected file via diff inside Docker |
+| OUTPUT-INFRA-001.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-INFRA-001.1 | `docker run --rm kata-tests` runs `./runTests`; all formatter tests pass; exit code 0 |
+| OUTPUT-INFRA-001.2-S1 | Chapter 6 Runtime View - Main Processing Scenario | OUTPUT-INFRA-001.2 | `docker run --rm kata-tests` runs `./runTests`; all tests pass; exit code 0 |
 | OUTPUT-STORY-002-S1 | Chapter 5 Building Block View - Output Formatter | OUTPUT-STORY-002 | first field header is `Field #1:`, second is `Field #2:` |
 | OUTPUT-STORY-002-S2 | Chapter 2 Constraints - C-2 | OUTPUT-STORY-002 | field index increments by one for each successive field |
 | OUTPUT-BE-002.1-S1 | Chapter 5 Building Block View - Output Formatter | OUTPUT-BE-002.1 | `printField` uses the supplied 1-based index in the header |
-| OUTPUT-INFRA-002.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-INFRA-002.1 | numbering tests pass inside Docker container |
+| OUTPUT-INFRA-002.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-INFRA-002.1 | `docker run --rm kata-tests` runs `./runTests`; numbering tests pass; exit code 0 |
 | OUTPUT-STORY-003-S1 | Chapter 2 Constraints - C-2 | OUTPUT-STORY-003 | blank line appears between field blocks |
 | OUTPUT-STORY-003-S2 | Chapter 2 Constraints - C-2 | OUTPUT-STORY-003 | no blank line after the final field |
 | OUTPUT-BE-003.1-S1 | Chapter 5 Building Block View - Output Formatter | OUTPUT-BE-003.1 | blank line emitted before field block when index > 1 |
-| OUTPUT-INFRA-003.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-INFRA-003.1 | separator placement test passes inside Docker container |
+| OUTPUT-INFRA-003.1-S1 | Chapter 8 Cross-Cutting Concepts - Testability | OUTPUT-INFRA-003.1 | `docker run --rm kata-tests` runs `./runTests`; separator test passes; exit code 0 |
