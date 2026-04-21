@@ -2,8 +2,8 @@
 
 Field processField(const Field& field) {
     Field result = field;
-    auto inBounds = [&](int r, int c) {
-        return r >= 0 && r < field.rows && c >= 0 && c < field.cols;
+    auto inBounds = [rows = field.rows, cols = field.cols](int r, int c) {
+        return r >= 0 && r < rows && c >= 0 && c < cols;
     };
     for (int r = 0; r < field.rows; r++) {
         for (int c = 0; c < field.cols; c++) {
