@@ -12,5 +12,7 @@ TEST(INPUT_INFRA_003_1_S1, MultiFieldTestExecutesInsideDocker) {
     // THEN - multi-field parsing works correctly
     ASSERT_EQ(fields.size(), 2);
     EXPECT_EQ(fields[0].rows, 1);
+    EXPECT_EQ(fields[0].cols, 1);
     EXPECT_EQ(fields[1].rows, 2);
+    EXPECT_EQ(fields[1].cols, 2);
 }
