@@ -10,5 +10,5 @@ struct Field {
 
 class FieldProcessor {
 public:
-    Field process(const Field& field);
+    static Field process(const Field& field);
 };
