@@ -3,14 +3,13 @@
 #include "OutputFormatter.hpp"
 
 TEST(OUTPUT_BE_002_1_S1, HeaderContainsSuppliedIndex) {
-    // GIVEN - printField is called with an ostringstream and index 3
+    // GIVEN - an annotated Field and index 3
     Field field{1, 1, {"0"}};
     std::ostringstream out;
 
-    // WHEN - the function writes its output
+    // WHEN - printField is called with the ostringstream, field, and index 3
     printField(out, field, 3);
 
     // THEN - the first line of the stream is "Field #3:"
-    std::string output = out.str();
-    EXPECT_NE(output.find("Field #3:"), std::string::npos);
+    EXPECT_EQ(out.str(), "\nField #3:\n0\n");
 }
