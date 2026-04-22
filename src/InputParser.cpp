@@ -6,7 +6,6 @@ std::vector<Field> parseFields(std::istream& input) {
     while (input >> rows >> cols && (rows || cols)) {
         input.ignore();
         std::vector<std::string> grid;
-        grid.reserve(rows);
         for (int r = 0; r < rows; r++) {
             std::string line;
             std::getline(input, line);

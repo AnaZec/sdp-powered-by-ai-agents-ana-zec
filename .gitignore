@@ -1,0 +1,34 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Sphinx
+docs/_build/
+
+# C/C++ artifacts
+*.o
+*.out
+*.exe
+*.bin
+*.a
+*.so
+minesweeper
+
+# Temp/editor files
+*.swp
+*.swo
+*.save
+*.tmp
+*~
+.DS_Store
+Thumbs.db
+
+# Project-specific temp files
+input.txt
+
+# Logs
+*.log
