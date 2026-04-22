@@ -1,5 +1,3 @@
-Here’s a **more professional, polished, and complete version** of your README. I kept your structure but elevated it to industry-level quality, added clarity, and made it sound like a real production-grade project.
-
 ---
 
 # Minesweeper Field Processor
